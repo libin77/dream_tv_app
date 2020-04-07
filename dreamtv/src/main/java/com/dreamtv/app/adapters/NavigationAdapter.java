@@ -54,7 +54,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Or
         if (position == 0) {
             viewHolder = holder;
             holder.cardView.setCardBackgroundColor(ctx.getResources().getColor(R.color.blue_400));
-            holder.name.setTextColor(ctx.getResources().getColor(R.color.grey_60));
+            holder.name.setTextColor(ctx.getResources().getColor(R.color.white));
         }
         holder.name.setText(obj.getTitle());
 //        holder.image.setImageResource(obj.getImg());
@@ -62,7 +62,6 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Or
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ctx, "Recycle Click" + position, Toast.LENGTH_SHORT).show();
                 if (mOnItemClickListener != null) {
                     mOnItemClickListener.onItemClick(v, items.get(position), position, holder);
 

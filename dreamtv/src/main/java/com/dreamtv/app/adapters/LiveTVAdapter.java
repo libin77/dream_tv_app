@@ -50,7 +50,6 @@ public class LiveTVAdapter extends RecyclerView.Adapter<LiveTVAdapter.OriginalVi
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ctx, "Recycle Click" + position, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ctx, DetailsActivity.class);
                 intent.putExtra("vType", obj.getVideoType());
                 intent.putExtra("id", obj.getId());
