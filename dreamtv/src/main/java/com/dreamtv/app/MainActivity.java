@@ -3,6 +3,7 @@ package com.dreamtv.app;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -12,12 +13,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,7 +37,7 @@ import com.dreamtv.app.utils.Tools;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
     private DrawerLayout mDrawerLayout;
@@ -113,6 +112,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerView.setAdapter(mAdapter);
 
         final NavigationAdapter.OriginalViewHolder[] viewHolder = {null};
+
+        mAdapter.setOnFocusChangeListener(new NavigationAdapter.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, NavigationModel obj, int position, NavigationAdapter.OriginalViewHolder holder) {
+                mAdapter.chanColor(viewHolder[0], position);
+                holder.cardView.setCardBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                holder.name.setTextColor(getResources().getColor(R.color.grey_500));
+                viewHolder[0] = holder;
+            }
+        });
         mAdapter.setOnItemClickListener(new NavigationAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, NavigationModel obj, int position, NavigationAdapter.OriginalViewHolder holder) {

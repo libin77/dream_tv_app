@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dreamtv.app.models.NavigationModel;
 import com.dreamtv.app.R;
@@ -21,10 +20,15 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Or
     private List<NavigationModel> items = new ArrayList<>();
     private Context ctx;
     private OnItemClickListener mOnItemClickListener;
+    private OnFocusChangeListener mOnFocusChangeListener;
     NavigationAdapter.OriginalViewHolder viewHolder;
 
     public interface OnItemClickListener {
         void onItemClick(View view, NavigationModel obj, int position, OriginalViewHolder holder);
+    }
+
+    public interface OnFocusChangeListener {
+        void onFocusChange(View view, NavigationModel obj, int position, OriginalViewHolder holder);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -32,6 +36,9 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Or
     }
 
 
+    public void setOnFocusChangeListener(final OnFocusChangeListener mOnFocusChangeListener) {
+        this.mOnFocusChangeListener = mOnFocusChangeListener;
+    }
     public NavigationAdapter(Context context, List<NavigationModel> items) {
         this.items = items;
         ctx = context;
@@ -69,6 +76,16 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Or
             }
         });
 
+        holder.cardView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if(hasFocus && null!=mOnFocusChangeListener){
+                    mOnFocusChangeListener.onFocusChange(v, items.get(position), position, holder);
+                }
+            }
+        });
 
     }
 
