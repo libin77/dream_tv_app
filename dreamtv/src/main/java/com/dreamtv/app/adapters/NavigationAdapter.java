@@ -9,19 +9,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dreamtv.app.models.NavigationModel;
 import com.dreamtv.app.R;
+import com.dreamtv.app.models.NavigationModel;
+import com.dreamtv.app.utils.RecyclerviewWithFocusListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.OriginalViewHolder> {
+public class NavigationAdapter extends RecyclerviewWithFocusListener.Adapter<NavigationAdapter.OriginalViewHolder> {
 
     private List<NavigationModel> items = new ArrayList<>();
     private Context ctx;
     private OnItemClickListener mOnItemClickListener;
     private OnFocusChangeListener mOnFocusChangeListener;
     NavigationAdapter.OriginalViewHolder viewHolder;
+    private boolean focusAttained;
 
     public interface OnItemClickListener {
         void onItemClick(View view, NavigationModel obj, int position, OriginalViewHolder holder);
@@ -39,6 +41,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Or
     public void setOnFocusChangeListener(final OnFocusChangeListener mOnFocusChangeListener) {
         this.mOnFocusChangeListener = mOnFocusChangeListener;
     }
+
     public NavigationAdapter(Context context, List<NavigationModel> items) {
         this.items = items;
         ctx = context;
@@ -54,7 +57,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Or
     }
 
     @Override
-    public void onBindViewHolder(final NavigationAdapter.OriginalViewHolder holder, final int position) {
+    public void onBindViewHolder(final OriginalViewHolder holder, final int position) {
 
         NavigationModel obj = items.get(position);
 
@@ -81,11 +84,18 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Or
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
 
-                if(hasFocus && null!=mOnFocusChangeListener){
+                if (hasFocus && null != mOnFocusChangeListener) {
+                    focusAttained = true;
                     mOnFocusChangeListener.onFocusChange(v, items.get(position), position, holder);
                 }
             }
         });
+
+        if (!focusAttained
+                && position == 0) {
+            holder.cardView.requestFocusFromTouch();
+            holder.cardView.requestFocus();
+        }
 
     }
 
