@@ -13,14 +13,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.dreamtv.app.adapters.NavigationAdapter;
 import com.dreamtv.app.fragments.LiveTvFragment;
@@ -31,6 +31,8 @@ import com.dreamtv.app.nav_fragments.CountryFragment;
 import com.dreamtv.app.nav_fragments.FavoriteFragment;
 import com.dreamtv.app.nav_fragments.GenreFragment;
 import com.dreamtv.app.nav_fragments.MainHomeFragment;
+import com.dreamtv.app.utils.GridLayoutManager;
+import com.dreamtv.app.utils.RecyclerviewWithFocusListener;
 import com.dreamtv.app.utils.SpacingItemDecoration;
 import com.dreamtv.app.utils.Tools;
 
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout mDrawerLayout;
     private Toolbar toolbar;
 
-    private RecyclerView recyclerView;
+    private RecyclerviewWithFocusListener recyclerView;
     private NavigationAdapter mAdapter;
     private List<NavigationModel> list =new ArrayList<>();
     private NavigationView navigationView;
@@ -52,8 +54,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String[] navItemName2;
     private String[] navItemImage2;
 
-    public static final int RECVIEW = 1;
+    public static final int RECVIEW1 = 1;
     private static int currFocus = 0;
+    private int currentFocusedItemPosition;
 
 
     @Override
@@ -111,11 +114,112 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAdapter = new NavigationAdapter(this, list);
         recyclerView.setAdapter(mAdapter);
 
+        recyclerView.setOnDispatchKeyEventListener(new RecyclerviewWithFocusListener.OnDispatchKeyEventListener() {
+            @Override
+            public void onDispatchKeyEventListener(int keyCode) {
+                int totalChildCount = recyclerView.getChildCount();
+                /**
+                 * Here we check, if the recyclerview is in-focus or not.
+                 * If the recyclerview is not in-focus, then we make the
+                 * first item in the recycler view in-focus
+                 */
+                if (currFocus != RECVIEW1) {
+                    currFocus = RECVIEW1;
+                    recyclerView.getChildAt(0).requestFocus();
+                } else {
+                    if (totalChildCount > 0) {
+                        switch (keyCode) {
+                            case KeyEvent.KEYCODE_DPAD_DOWN:
+                                //------------- NOT USING THIS EVENT --------------------------------------------------------
+//                                Toast.makeText(MainActivity.this, "D-PAD DOWN >> \nCurrent Position >" + currentFocusedItemPosition
+//                                        + "\nselectedItem Position in KeyEventDispatcher> " + selectedItemInKeyEventListener, Toast.LENGTH_SHORT).show();
+//                                if (selectedItemInKeyEventListener == currentFocusedItemPosition) {
+//                                    selectedItemInKeyEventListener = currentFocusedItemPosition + 2;
+//                                    if (selectedItemInKeyEventListener < totalChildCount) {
+//                                        System.out.println("TRIGGERED >> D-PAD DOWN, position > " + selectedItemInKeyEventListener);
+//                                        recyclerView.getChildAt(selectedItemInKeyEventListener).requestFocusFromTouch();
+//                                        recyclerView.getChildAt(selectedItemInKeyEventListener).requestFocus();
+//                                    }
+//                                    Toast.makeText(MainActivity.this, "D-PAD DOWN", Toast.LENGTH_SHORT).show();
+//                                }
+                                break;
+                            case KeyEvent.KEYCODE_DPAD_UP:
+                                //------------- NOT USING THIS EVENT --------------------------------------------------------
+//                                Toast.makeText(MainActivity.this, "D-PAD UP >> \nCurrent Position >" + currentFocusedItemPosition
+//                                        + "\nselectedItem Position in KeyEventDispatcher > " + selectedItemInKeyEventListener, Toast.LENGTH_SHORT).show();
+//                                if (selectedItemInKeyEventListener == currentFocusedItemPosition) {
+//                                    selectedItemInKeyEventListener = currentFocusedItemPosition - 2;
+//                                    if (selectedItemInKeyEventListener >= 0) {
+//                                        System.out.println("TRIGGERED >> D-PAD UP, position > " + selectedItemInKeyEventListener);
+//
+//                                        recyclerView.getChildAt(selectedItemInKeyEventListener).requestFocusFromTouch();
+//                                        recyclerView.getChildAt(selectedItemInKeyEventListener).requestFocus();
+//                                    }
+//                                    Toast.makeText(MainActivity.this, "D-PAD UP", Toast.LENGTH_SHORT).show();
+//                                }
+                                break;
+                            case KeyEvent.KEYCODE_DPAD_RIGHT:
+                                //------------- NOT USING THIS EVENT --------------------------------------------------------
+//                                Toast.makeText(MainActivity.this, "D-PAD RIGHT >> \nCurrent Position >" + currentFocusedItemPosition
+//                                        + "\nselectedItem Position in KeyEventDispatcher > " + selectedItemInKeyEventListener, Toast.LENGTH_SHORT).show();
+//                                if (selectedItemInKeyEventListener == currentFocusedItemPosition) {
+//                                    selectedItemInKeyEventListener = currentFocusedItemPosition + 1;
+//                                    if (selectedItemInKeyEventListener > 0 &&
+//                                            (selectedItemInKeyEventListener == 1 || selectedItemInKeyEventListener % 2 != 0)) {
+//                                        System.out.println("TRIGGERED >> D-PAD RIGHT, position > " + selectedItemInKeyEventListener);
+//
+//                                        recyclerView.getChildAt(selectedItemInKeyEventListener).requestFocusFromTouch();
+//                                        recyclerView.getChildAt(selectedItemInKeyEventListener).requestFocus();
+//                                    }
+//                                    Toast.makeText(MainActivity.this, "D-PAD RIGHT", Toast.LENGTH_SHORT).show();
+//                                }
+                                break;
+                            case KeyEvent.KEYCODE_DPAD_LEFT:
+                                //------------- NOT USING THIS EVENT --------------------------------------------------------
+//                                Toast.makeText(MainActivity.this, "D-PAD LEFT >> \nCurrent Position >" + currentFocusedItemPosition
+//                                        + "\nselectedItem Position in KeyEventDispatcher > " + selectedItemInKeyEventListener, Toast.LENGTH_SHORT).show();
+//
+//                                if (selectedItemInKeyEventListener == currentFocusedItemPosition) {
+//                                    selectedItemInKeyEventListener = currentFocusedItemPosition - 1;
+//                                    if (selectedItemInKeyEventListener == 0 || selectedItemInKeyEventListener % 2 == 0) {
+//                                        System.out.println("TRIGGERED >> D-PAD LEFT, position > " + selectedItemInKeyEventListener);
+//
+//                                        recyclerView.getChildAt(selectedItemInKeyEventListener).requestFocusFromTouch();
+//                                        recyclerView.getChildAt(selectedItemInKeyEventListener).requestFocus();
+//                                    }
+//                                    Toast.makeText(MainActivity.this, "D-PAD LEFT", Toast.LENGTH_SHORT).show();
+//                                }
+                                break;
+                            case KeyEvent.KEYCODE_DPAD_CENTER:
+                                Toast.makeText(MainActivity.this, "D-PAD CLICK >> \nCurrent Position >" + currentFocusedItemPosition, Toast.LENGTH_SHORT).show();
+
+//                                System.out.println("TRIGGERED >> D-PAD CLICK, position > " + currentFocusedItemPosition);
+
+                                recyclerView.getChildAt(currentFocusedItemPosition).requestFocusFromTouch();
+                                recyclerView.getChildAt(currentFocusedItemPosition).requestFocus();
+                                recyclerView.getChildAt(currentFocusedItemPosition).callOnClick();
+//                                Toast.makeText(MainActivity.this, "D-PAD CLICK", Toast.LENGTH_SHORT).show();
+                                break;
+
+                        }
+                    }
+                }
+
+            }
+        });
+
+
         final NavigationAdapter.OriginalViewHolder[] viewHolder = {null};
 
         mAdapter.setOnFocusChangeListener(new NavigationAdapter.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, NavigationModel obj, int position, NavigationAdapter.OriginalViewHolder holder) {
+                currentFocusedItemPosition = position;
+//                Toast.makeText(MainActivity.this, "TRIGGERED >> onFocusChange, position >  \nCurrent Position >" + currentFocusedItemPosition
+//                        + "\nselectedItem Position in KeyEventDispatcher > " + selectedItemInKeyEventListener, Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(MainActivity.this, "TRIGGERED >> onFocusChange, position >  \nCurrent Position >" + currentFocusedItemPosition, Toast.LENGTH_SHORT).show();
+
                 mAdapter.chanColor(viewHolder[0], position);
                 holder.cardView.setCardBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 holder.name.setTextColor(getResources().getColor(R.color.grey_500));

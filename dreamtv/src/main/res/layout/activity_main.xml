@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:focusable="true"
     android:layout_height="match_parent"
     tools:context="com.dreamtv.app.MainActivity">
 
@@ -67,7 +68,7 @@
             </LinearLayout>
             <!--<include layout="@layout/navigation_header" />-->
 
-            <android.support.v7.widget.RecyclerView
+            <com.dreamtv.app.utils.RecyclerviewWithFocusListener
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
